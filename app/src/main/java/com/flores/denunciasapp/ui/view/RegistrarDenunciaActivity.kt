@@ -1,6 +1,7 @@
 package com.flores.denunciasapp.ui.view
 
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -18,8 +19,15 @@ class RegistrarDenunciaActivity : AppCompatActivity() {
         binding = ActivityRegistrarDenunciaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupDropdown()
         setupObservers()
         setupListeners()
+    }
+
+    private fun setupDropdown() {
+        val tipos = arrayOf("ROBO", "ASALTO", "VANDALISMO", "DISTURBIOS")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, tipos)
+        binding.etTipo.setAdapter(adapter)
     }
 
     private fun setupObservers() {
@@ -32,6 +40,10 @@ class RegistrarDenunciaActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         binding.btnGuardar.setOnClickListener {
             val dni = binding.etDni.text.toString().trim()
             val tipo = binding.etTipo.text.toString().trim()
@@ -39,12 +51,12 @@ class RegistrarDenunciaActivity : AppCompatActivity() {
             val descripcion = binding.etDescripcion.text.toString().trim()
 
             if (dni.isEmpty() || dni.length != 8 || !dni.all { it.isDigit() }) {
-                binding.etDni.error = "El DNI debe tener exactamente 8 dígitos numéricos"
+                binding.etDni.error = "El DNI debe tener exactamente 8 dígitos"
                 binding.etDni.requestFocus()
                 return@setOnClickListener
             }
             if (tipo.isEmpty()) {
-                binding.etTipo.error = "Ingrese el tipo de denuncia"
+                binding.etTipo.error = "Seleccione o ingrese el tipo de delito"
                 binding.etTipo.requestFocus()
                 return@setOnClickListener
             }

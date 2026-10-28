@@ -40,8 +40,12 @@ class BuscarDniActivity : AppCompatActivity() {
     private fun setupObservers() {
         viewModel.busquedaDenuncias.observe(this) { list ->
             adapter.updateList(list)
+            val dni = binding.etBuscarDni.text.toString().trim()
             if (list.isEmpty()) {
+                binding.tvResultadoInfo.text = "No hay denuncias asociadas a este DNI ($dni)"
                 Toast.makeText(this, "No se encontraron denuncias para este DNI", Toast.LENGTH_SHORT).show()
+            } else {
+                binding.tvResultadoInfo.text = "Resultados para DNI: $dni • ${list.size} denuncias"
             }
         }
         viewModel.error.observe(this) { errorMsg ->
@@ -50,10 +54,15 @@ class BuscarDniActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         binding.btnBuscar.setOnClickListener {
             val dni = binding.etBuscarDni.text.toString().trim()
-            if (dni.length != 8) {
+            if (dni.length != 8 || !dni.all { it.isDigit() }) {
                 binding.etBuscarDni.error = "Ingrese un DNI válido de 8 dígitos"
+                binding.etBuscarDni.requestFocus()
                 return@setOnClickListener
             }
             viewModel.buscarPorDni(dni)

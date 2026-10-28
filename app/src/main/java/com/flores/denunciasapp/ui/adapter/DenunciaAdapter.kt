@@ -1,9 +1,10 @@
 package com.flores.denunciasapp.ui.adapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.flores.denunciasapp.R
 import com.flores.denunciasapp.data.model.Denuncia
 import com.flores.denunciasapp.databinding.ItemDenunciaBinding
 
@@ -14,17 +15,18 @@ class DenunciaAdapter(
 
     inner class DenunciaViewHolder(val binding: ItemDenunciaBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(denuncia: Denuncia) {
-            binding.tvTipo.text = "Tipo: ${denuncia.tipo}"
-            binding.tvDni.text = "DNI: ${denuncia.dni}"
-            binding.tvDireccion.text = "Dirección: ${denuncia.direccion}"
-            binding.tvFecha.text = "Fecha: ${denuncia.fecha ?: "N/A"}"
-            
+            binding.tvTipo.text = denuncia.tipo
+            binding.tvDniFecha.text = "DNI: ${denuncia.dni} • ${denuncia.fecha ?: "Sin fecha"}"
+            binding.tvDireccion.text = "📍 ${denuncia.direccion}"
+
             if (denuncia.estado == 1) {
-                binding.tvEstado.text = "PENDIENTE"
-                binding.tvEstado.setTextColor(Color.parseColor("#FFA500")) // Naranja
+                binding.tvEstadoBadge.text = "PENDIENTE"
+                binding.tvEstadoBadge.background = ContextCompat.getDrawable(binding.root.context, R.drawable.bg_chip_pendiente)
+                binding.tvEstadoBadge.setTextColor(ContextCompat.getColor(binding.root.context, R.color.badge_pendiente_text))
             } else {
-                binding.tvEstado.text = "ATENDIDA"
-                binding.tvEstado.setTextColor(Color.parseColor("#008000")) // Verde
+                binding.tvEstadoBadge.text = "ATENDIDA"
+                binding.tvEstadoBadge.background = ContextCompat.getDrawable(binding.root.context, R.drawable.bg_chip_atendida)
+                binding.tvEstadoBadge.setTextColor(ContextCompat.getColor(binding.root.context, R.color.badge_atendida_text))
             }
 
             binding.root.setOnClickListener {

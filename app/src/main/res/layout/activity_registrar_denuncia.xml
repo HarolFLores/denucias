@@ -1,63 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:padding="16dp">
+    android:background="@color/surface_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Registrar Denuncia"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="20dp"/>
-
-        <EditText
-            android:id="@+id/etDni"
+        <!-- Header -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="DNI (8 dígitos)"
-            android:inputType="number"
-            android:maxLength="8"
-            android:layout_marginBottom="16dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
-        <EditText
-            android:id="@+id/etTipo"
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_revert"
+                app:tint="@color/primary_blue"
+                android:contentDescription="Atrás"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nuevo Expediente"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_blue"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tipo (ej. ROBO, ASALTO, VANDALISMO)"
-            android:inputType="text"
-            android:layout_marginBottom="16dp"/>
+            app:cardBackgroundColor="@color/card_white"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            android:layout_marginBottom="24dp">
 
-        <EditText
-            android:id="@+id/etDireccion"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Complete la información para generar el reporte municipal y despachar unidades."
+                android:textSize="14sp"
+                android:textColor="@color/text_muted"
+                android:padding="16dp"/>
+        </androidx.cardview.widget.CardView>
+
+        <!-- DNI -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Dirección (máx 200 caracteres)"
-            android:maxLength="200"
-            android:inputType="textPostalAddress"
-            android:layout_marginBottom="16dp"/>
+            android:hint="DNI del Denunciante"
+            app:counterEnabled="true"
+            app:counterMaxLength="8"
+            android:layout_marginBottom="16dp">
 
-        <EditText
-            android:id="@+id/etDescripcion"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDni"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="8"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Tipo -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Descripción (máx 255 caracteres)"
-            android:maxLength="255"
-            android:inputType="textLongMessage"
-            android:layout_marginBottom="24dp"/>
+            android:hint="Tipo de Delito / Incidente"
+            android:layout_marginBottom="16dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/etTipo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Dirección -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dirección del hecho"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:maxLength="200"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Descripción -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripción detallada de los hechos"
+            android:layout_marginBottom="24dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textLongMessage|textMultiLine"
+                android:lines="4"
+                android:gravity="top|start"
+                android:maxLength="255"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Guardar Denuncia"/>
+            android:layout_height="56dp"
+            android:text="Guardar Denuncia"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/primary_blue"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            app:cornerRadius="12dp"/>
 
     </LinearLayout>
 </ScrollView>

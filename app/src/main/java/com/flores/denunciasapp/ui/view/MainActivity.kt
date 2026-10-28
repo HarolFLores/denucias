@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.flores.denunciasapp.data.model.Denuncia
 import com.flores.denunciasapp.databinding.ActivityMainBinding
 import com.flores.denunciasapp.ui.adapter.DenunciaAdapter
 import com.flores.denunciasapp.ui.viewmodel.DenunciaViewModel
@@ -15,6 +16,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: DenunciaViewModel by viewModels()
     private lateinit var adapter: DenunciaAdapter
+    private var allDenuncias: List<Denuncia> = emptyList()
+    private var currentFilter: Int = -1 // -1: Todos, 1: Pendientes, 0: Atendidas
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,26 +49,44 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupObservers() {
         viewModel.denuncias.observe(this) { list ->
-            adapter.updateList(list)
+            allDenuncias = list
+            applyFilter()
         }
         viewModel.error.observe(this) { errorMsg ->
             Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
         }
     }
 
+    private fun applyFilter() {
+        val filtered = when (currentFilter) {
+            1 -> allDenuncias.filter { it.estado == 1 }
+            0 -> allDenuncias.filter { it.estado == 0 }
+            else -> allDenuncias
+        }
+        adapter.updateList(filtered)
+        binding.tvTotalVisible.text = "Total visible: ${filtered.size} casos"
+    }
+
     private fun setupListeners() {
-        binding.btnIrRegistrar.setOnClickListener {
-            val intent = Intent(this, RegistrarDenunciaActivity::class.java)
-            startActivity(intent)
+        binding.btnNuevaDenuncia.setOnClickListener {
+            startActivity(Intent(this, RegistrarDenunciaActivity::class.java))
         }
 
-        binding.btnIrBuscar.setOnClickListener {
-            val intent = Intent(this, BuscarDniActivity::class.java)
-            startActivity(intent)
+        binding.btnSearchAction.setOnClickListener {
+            startActivity(Intent(this, BuscarDniActivity::class.java))
         }
 
         binding.btnCargarSiguientes.setOnClickListener {
             viewModel.cargarSiguientes5()
+        }
+
+        binding.chipGroupFiltros.setOnCheckedChangeListener { _, checkedId ->
+            currentFilter = when (checkedId) {
+                binding.chipPendientes.id -> 1
+                binding.chipAtendidas.id -> 0
+                else -> -1 // Todos
+            }
+            applyFilter()
         }
     }
 }
